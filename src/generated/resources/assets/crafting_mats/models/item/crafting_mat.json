@@ -1,0 +1,20 @@
+{
+  "parent": "minecraft:item/generated",
+  "base": {
+    "parent": "minecraft:item/generated",
+    "textures": {
+      "layer0": "crafting_mats:item/crafting_mat_paper",
+      "layer1": "crafting_mats:item/crafting_mat_grid",
+      "layer2": "crafting_mats:item/crafting_mat"
+    }
+  },
+  "loader": "neoforge:separate_transforms",
+  "perspectives": {
+    "crafting_mats:crafting_mat": {
+      "parent": "crafting_mats:block/crafting_mat"
+    }
+  },
+  "textures": {
+    "layer0": "crafting_mats:item/crafting_mat_paper"
+  }
+}

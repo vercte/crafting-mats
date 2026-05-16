@@ -1,0 +1,10 @@
+{
+  "entries": [
+    {
+      "enum": "net/minecraft/world/item/ItemDisplayContext",
+      "name": "CRAFTING_MATS_CRAFTING_MAT",
+      "constructor": "(ILjava/lang/String;Ljava/lang/String;)V",
+      "parameters": [ -1, "crafting_mats:crafting_mat", null ]
+    }
+  ]
+}
