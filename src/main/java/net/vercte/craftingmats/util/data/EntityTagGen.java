@@ -4,8 +4,6 @@ import dev.ryanhcode.sable.index.SableTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.EntityTypeTagsProvider;
-import net.minecraft.data.tags.ItemTagsProvider;
-import net.minecraft.tags.ItemTags;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.vercte.craftingmats.CraftingMats;
 import org.jetbrains.annotations.NotNull;
