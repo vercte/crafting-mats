@@ -74,7 +74,7 @@ public class CraftingMat extends BlockAttachedEntity {
     }
 
     public CraftingMat(ItemStack stack, Level level, BlockPos pos) {
-        this(CraftingMats.CRAFTING_MAT.get(), level, pos);
+        this(CraftingMats.CRAFTING_MAT, level, pos);
         this.setPos(pos.getX(), pos.getY(), pos.getZ());
         this.getEntityData().set(DATA_ITEM, stack);
     }
@@ -164,7 +164,7 @@ public class CraftingMat extends BlockAttachedEntity {
 
     @Override
     protected void defineSynchedData(@NotNull SynchedEntityData.Builder builder) {
-        builder.define(DATA_ITEM, CraftingMats.CRAFTING_MAT_ITEM.toStack());
+        builder.define(DATA_ITEM, CraftingMats.CRAFTING_MAT_ITEM.getDefaultInstance());
     }
 
     @Override
@@ -173,7 +173,7 @@ public class CraftingMat extends BlockAttachedEntity {
 
         fixed = tag.getBoolean("Fixed");
         ItemStack stack = ItemStack.parse(this.registryAccess(), tag.getCompound("Item"))
-                .orElse(CraftingMats.CRAFTING_MAT_ITEM.toStack());
+                .orElse(CraftingMats.CRAFTING_MAT_ITEM.getDefaultInstance());
         this.getEntityData().set(DATA_ITEM, stack);
     }
 

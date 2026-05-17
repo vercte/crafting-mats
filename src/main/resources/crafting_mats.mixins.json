@@ -4,8 +4,10 @@
   "package": "net.vercte.craftingmats.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "ItemDisplayContextMixin"
   ],
   "client": [
+    "client.FabricItemRendererMixin",
     "client.GameRendererMixin"
   ],
   "injectors": {

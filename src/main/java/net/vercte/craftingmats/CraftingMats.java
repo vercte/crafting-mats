@@ -1,36 +1,32 @@
 package net.vercte.craftingmats;
 
+import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
+import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.item.*;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
-import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredItem;
-import net.neoforged.neoforge.registries.DeferredRegister;
 import net.vercte.craftingmats.mat.CraftingMat;
 import net.vercte.craftingmats.mat.CraftingMatItem;
-import net.vercte.craftingmats.util.CraftingMatDataGeneration;
 
-@Mod(CraftingMats.ID)
-public class CraftingMats {
+public class CraftingMats implements ModInitializer {
     public static final String ID = "crafting_mats";
 
-    private static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(ID);
-
-    public static final DeferredItem<CraftingMatItem> CRAFTING_MAT_ITEM = ITEMS.registerItem(
-            "crafting_mat", CraftingMatItem::new,
-            new Item.Properties().stacksTo(1)
+    public static final CraftingMatItem CRAFTING_MAT_ITEM = Registry.register(
+            BuiltInRegistries.ITEM,
+            at("crafting_mat"),
+            new CraftingMatItem(
+                    new Item.Properties().stacksTo(1)
+            )
     );
 
-    private static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(BuiltInRegistries.ENTITY_TYPE, ID);
-
-    public static final DeferredHolder<EntityType<?>, EntityType<CraftingMat>> CRAFTING_MAT = ENTITIES.register(
-            "crafting_mat",
-            () -> EntityType.Builder.<CraftingMat>of(CraftingMat::new, MobCategory.MISC)
+    public static final EntityType<CraftingMat> CRAFTING_MAT = Registry.register(
+            BuiltInRegistries.ENTITY_TYPE,
+            at("crafting_mat"),
+            EntityType.Builder.<CraftingMat>of(CraftingMat::new, MobCategory.MISC)
                     .sized(1.05f, 1.05f)
                     .eyeHeight(0)
                     .clientTrackingRange(10)
@@ -38,18 +34,16 @@ public class CraftingMats {
                     .build("crafting_mats:crafting_mat")
     );
 
-    public CraftingMats(IEventBus bus) {
-        ITEMS.register(bus);
-        ENTITIES.register(bus);
-
-        bus.addListener(this::creativeTabBuild);
-        bus.addListener(CraftingMatDataGeneration::gatherData);
+    @Override
+    public void onInitialize() {
+        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.TOOLS_AND_UTILITIES).register(this::creativeTabBuild);
     }
 
-    private void creativeTabBuild(final BuildCreativeModeTabContentsEvent event) {
-        if(event.getTabKey().equals(CreativeModeTabs.TOOLS_AND_UTILITIES)) {
-            event.insertAfter(new ItemStack(Items.MAP), CRAFTING_MAT_ITEM.toStack(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
-        }
+    private void creativeTabBuild(FabricItemGroupEntries entries) {
+        entries.addAfter(
+                new ItemStack(Items.MAP),
+                CRAFTING_MAT_ITEM.getDefaultInstance()
+        );
     }
 
     public static ResourceLocation at(String path) {

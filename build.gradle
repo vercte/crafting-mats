@@ -1,10 +1,6 @@
-import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
-
 plugins {
-    id 'java-library'
+    id 'net.fabricmc.fabric-loom-remap' version "${loom_version}"
     id 'maven-publish'
-    id 'idea'
-    id 'net.neoforged.moddev' version '2.0.141'
 }
 
 version = mod_version
@@ -50,115 +46,78 @@ repositories {
 }
 
 dependencies {
-    if(DefaultNativePlatform.getCurrentOperatingSystem().isMacOsX()) { // MacOS Dev Tweaks
-        runtimeOnly "maven.modrinth:ctrl-q:1.9.2-neoforge-1.20.6+"
-        runtimeOnly "maven.modrinth:mcmouser:1.21-neoforge-1.0.1"
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings loom.officialMojangMappings()
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+
+    if(true) { // MacOS Dev Tweaks
+        modRuntimeOnly "maven.modrinth:ctrl-q:N4g6q0kL"
+        modRuntimeOnly "maven.modrinth:mcmouser:1.21-fabric-1.0.0"
     }
 
     // Sable
-    compileOnlyApi("dev.ryanhcode.sable:sable-neoforge-${project.minecraft_version}:${project.sable_version}") {
-        exclude group: "com.simibubi.create"
-        exclude group: "net.createmod.ponder"
-        exclude group: "dev.engine-room.flywheel"
-        exclude group: "com.tterrag.registrate"
-    }
+    modCompileOnlyApi("dev.ryanhcode.sable:sable-fabric-${project.minecraft_version}:${project.sable_version}")
 
     if(sable_enabled) {
-        runtimeOnly("foundry.veil:veil-neoforge-${project.minecraft_version}:${project.veil_version}") {
+        modRuntimeOnly("foundry.veil:veil-fabric-${project.minecraft_version}:${project.veil_version}") {
             exclude group: "maven.modrinth"
         }
 
-        runtimeOnly("dev.ryanhcode.sable:sable-neoforge-${project.minecraft_version}:${project.sable_version}") {
-            exclude group: "com.simibubi.create"
-            exclude group: "net.createmod.ponder"
-            exclude group: "dev.engine-room.flywheel"
-            exclude group: "com.tterrag.registrate"
-        }
+        modRuntimeOnly("dev.ryanhcode.sable:sable-fabric-${project.minecraft_version}:${project.sable_version}")
     }
 }
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(21)
-
-neoForge {
-    version = project.neo_version
-
-    runs {
-        client {
-            client()
-
-            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
-        }
-
-        server {
-            server()
-            programArgument '--nogui'
-            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
-        }
-
-        gameTestServer {
-            type = "gameTestServer"
-            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
-        }
-
-        data {
-            data()
-
-            programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
-        }
-
-        configureEach {
-            systemProperty 'forge.logging.markers', 'REGISTRIES'
-
-            logLevel = org.slf4j.event.Level.DEBUG
-        }
-    }
-
-    mods {
-        "${mod_id}" {
-            sourceSet(sourceSets.main)
-        }
+fabricApi {
+    configureDataGeneration {
+        client = true
     }
 }
 
-sourceSets.main.resources { srcDir 'src/generated/resources' }
+processResources {
+    inputs.property "version", version
+    inputs.property "mod_name", mod_name
+    inputs.property "mod_id", mod_id
+    inputs.property "description", description
 
-var generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {
-    var replaceProperties = [minecraft_version      : minecraft_version,
-                             minecraft_version_range: minecraft_version_range,
-                             neo_version            : neo_version,
-                             neo_version_range      : neo_version_range,
-                             loader_version_range   : loader_version_range,
-                             mod_id                 : mod_id,
-                             mod_name               : mod_name,
-                             mod_license            : mod_license,
-                             mod_version            : mod_version,
-                             mod_authors            : mod_authors,
-                             mod_description        : mod_description]
-    inputs.properties replaceProperties
-    expand replaceProperties
-    from "src/main/templates"
-    into "build/generated/sources/modMetadata"
+    filesMatching("fabric.mod.json") {
+        expand(
+            "version": version,
+            "mod_name": mod_name,
+            "mod_id": mod_id,
+            "description": description
+        )
+    }
 }
 
-sourceSets.main.resources.srcDir generateModMetadata
-neoForge.ideSyncTask generateModMetadata
+tasks.withType(JavaCompile).configureEach {
+    it.options.release = 21
+}
+
+java {
+    withSourcesJar()
+
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+jar {
+    def projectName = project.name
+    inputs.property "projectName", projectName
+
+    from("LICENSE") {
+        rename { "${it}_$projectName"}
+    }
+}
 
 publishing {
     publications {
-        register('mavenJava', MavenPublication) {
+        create("mavenJava", MavenPublication) {
             from components.java
         }
     }
-    repositories {
-        maven {
-            url "file://${project.projectDir}/repo"
-        }
-    }
-}
 
-idea {
-    module {
-        downloadSources = true
-        downloadJavadoc = true
+    repositories {
     }
 }

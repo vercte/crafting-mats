@@ -1,0 +1,37 @@
+{
+	"schemaVersion": 1,
+	"id": "${mod_id}",
+	"version": "${version}",
+	"name": "${mod_name}",
+	"description": "${description}",
+	"authors": [
+		"Vercte"
+	],
+	"contact": {
+		"homepage": "https://modrinth.com/mod/crafting-mats",
+		"sources": "https://github.com/vercte/crafting-mats"
+	},
+	"license": "CC0-1.0",
+	"icon": "icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"net.vercte.craftingmats.CraftingMats"
+		],
+		"client": [
+			"net.vercte.craftingmats.CraftingMatsClient"
+		],
+		"fabric-datagen": [
+			"net.vercte.craftingmats.util.CraftingMatDataGeneration"
+		]
+	},
+	"mixins": [
+		"crafting_mats.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.19.2",
+		"minecraft": "~1.21.1",
+		"java": ">=21",
+		"fabric-api": "*"
+	}
+}

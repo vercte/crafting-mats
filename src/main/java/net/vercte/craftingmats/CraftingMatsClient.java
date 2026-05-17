@@ -1,32 +1,26 @@
 package net.vercte.craftingmats;
 
-import net.minecraft.client.renderer.entity.EntityRenderers;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.neoforge.client.event.EntityRenderersEvent;
-import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
+import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
+import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.vercte.craftingmats.fabric.CraftingMatsModelLoadingPlugin;
 import net.vercte.craftingmats.mat.CraftingMat;
 import net.vercte.craftingmats.mat.CraftingMatRenderer;
 
-@Mod(value = CraftingMats.ID, dist = Dist.CLIENT)
-public class CraftingMatsClient {
-    public CraftingMatsClient(IEventBus bus) {
-        bus.addListener(this::registerEntityRenderers);
-        bus.addListener(this::registerItemColorHandlers);
-    }
+public class CraftingMatsClient implements ClientModInitializer {
+    @Override
+    public void onInitializeClient() {
+        EntityRendererRegistry.register(CraftingMats.CRAFTING_MAT, CraftingMatRenderer::new);
 
-    private void registerEntityRenderers(final EntityRenderersEvent.RegisterRenderers event) {
-        EntityRenderers.register(CraftingMats.CRAFTING_MAT.get(), CraftingMatRenderer<CraftingMat>::new);
-    }
+        ModelLoadingPlugin.register(new CraftingMatsModelLoadingPlugin());
 
-    public void registerItemColorHandlers(RegisterColorHandlersEvent.Item event) {
-        event.register((stack, layer) -> {
+        ColorProviderRegistry.ITEM.register((stack, layer) -> {
             if(stack.is(CraftingMats.CRAFTING_MAT_ITEM)) {
                 if(layer == 0) return CraftingMat.calculateColor(stack, false);
                 if(layer == 1) return CraftingMat.calculateColor(stack, true);
             }
             return 0xffffffff;
-        }, CraftingMats.CRAFTING_MAT_ITEM.get());
+        }, CraftingMats.CRAFTING_MAT_ITEM);
     }
 }
