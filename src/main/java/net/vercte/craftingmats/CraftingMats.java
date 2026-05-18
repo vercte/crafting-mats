@@ -49,7 +49,7 @@ public class CraftingMats {
         bus.addListener(CraftingMatDataGeneration::gatherData);
     }
 
-    public void initExtra(final FMLCommonSetupEvent event) {
+    private void initExtra(final FMLCommonSetupEvent event) {
         CauldronInteraction.WATER.map().put(CRAFTING_MAT_ITEM.get(), CauldronInteraction.DYED_ITEM);
     }
 
