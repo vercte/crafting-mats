@@ -49,7 +49,7 @@ public class CraftingMats implements ModInitializer {
         );
     }
 
-    public void initExtra() {
+    private void initExtra() {
         CauldronInteraction.WATER.map().put(CRAFTING_MAT_ITEM, CauldronInteraction.DYED_ITEM);
     }
 
