@@ -1,5 +1,6 @@
 package net.vercte.craftingmats;
 
+import net.minecraft.core.cauldron.CauldronInteraction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
@@ -7,6 +8,7 @@ import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.item.*;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
@@ -42,8 +44,13 @@ public class CraftingMats {
         ITEMS.register(bus);
         ENTITIES.register(bus);
 
+        bus.addListener(this::initExtra);
         bus.addListener(this::creativeTabBuild);
         bus.addListener(CraftingMatDataGeneration::gatherData);
+    }
+
+    public void initExtra(final FMLCommonSetupEvent event) {
+        CauldronInteraction.WATER.map().put(CRAFTING_MAT_ITEM.get(), CauldronInteraction.DYED_ITEM);
     }
 
     private void creativeTabBuild(final BuildCreativeModeTabContentsEvent event) {
