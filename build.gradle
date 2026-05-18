@@ -52,10 +52,8 @@ dependencies {
 
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
-    if(true) { // MacOS Dev Tweaks
-        modRuntimeOnly "maven.modrinth:ctrl-q:N4g6q0kL"
-        modRuntimeOnly "maven.modrinth:mcmouser:1.21-fabric-1.0.0"
-    }
+    modRuntimeOnly "maven.modrinth:ctrl-q:N4g6q0kL"
+    modRuntimeOnly "maven.modrinth:mcmouser:1.21-fabric-1.0.0"
 
     // Sable
     modCompileOnlyApi("dev.ryanhcode.sable:sable-fabric-${project.minecraft_version}:${project.sable_version}")
