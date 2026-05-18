@@ -20,8 +20,8 @@ public class FabricItemRendererMixin {
     @Final
     private ItemModelShaper itemModelShaper;
 
-    @ModifyVariable(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/resources/model/BakedModel;getTransforms()Lnet/minecraft/client/renderer/block/model/ItemTransforms;"), argsOnly = true, name = "bakedModel")
-    public BakedModel modifyMatModel(BakedModel bakedModel, @Local(argsOnly = true, name = "itemStack") ItemStack itemStack, @Local(argsOnly = true, name = "itemDisplayContext") ItemDisplayContext itemDisplayContext) {
+    @ModifyVariable(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/resources/model/BakedModel;getTransforms()Lnet/minecraft/client/renderer/block/model/ItemTransforms;"), argsOnly = true)
+    public BakedModel modifyMatModel(BakedModel bakedModel, @Local(argsOnly = true) ItemStack itemStack, @Local(argsOnly = true) ItemDisplayContext itemDisplayContext) {
         if(itemStack.is(CraftingMats.CRAFTING_MAT_ITEM) && itemDisplayContext == ItemDisplayContext.valueOf("CRAFTING_MATS_CRAFTING_MAT")) {
             return this.itemModelShaper.getModelManager().getModel(
                     CraftingMatsModelLoadingPlugin.CRAFTING_MAT_WORLD_MODEL
