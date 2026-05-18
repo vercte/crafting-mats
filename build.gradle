@@ -11,7 +11,7 @@ version = mod_version
 group = mod_group_id
 
 base {
-    archivesName = "crafting-mats-fabric-$minecraft_version"
+    archivesName = "crafting-mats-neoforge-$minecraft_version"
 }
 
 repositories {
@@ -51,7 +51,7 @@ repositories {
 
 dependencies {
     if(DefaultNativePlatform.getCurrentOperatingSystem().isMacOsX()) { // MacOS Dev Tweaks
-        runtimeOnly "maven.modrinth:ctrl-q:1.9.2-neoforge-1.20.6+"
+        runtimeOnly "maven.modrinth:ctrl-q:vPF3yZ8N"
         runtimeOnly "maven.modrinth:mcmouser:1.21-neoforge-1.0.1"
     }
 
