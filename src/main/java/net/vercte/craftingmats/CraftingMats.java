@@ -41,6 +41,8 @@ public class CraftingMats {
     );
 
     public CraftingMats(IEventBus bus) {
+        ITEMS.addAlias(ResourceLocation.fromNamespaceAndPath("satchels", "crafting_mat"), at("crafting_mat"));
+        ENTITIES.addAlias(ResourceLocation.fromNamespaceAndPath("satchels", "crafting_mat"), at("crafting_mat"));
         ITEMS.register(bus);
         ENTITIES.register(bus);
 
