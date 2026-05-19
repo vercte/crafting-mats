@@ -11,7 +11,7 @@
 		"homepage": "https://modrinth.com/mod/crafting-mats",
 		"sources": "https://github.com/vercte/crafting-mats"
 	},
-	"license": "CC0-1.0",
+	"license": "MIT",
 	"icon": "icon.png",
 	"environment": "*",
 	"entrypoints": {
