@@ -32,6 +32,9 @@ repositories {
 dependencies {
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
+    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.5.4"))
+    implementation(jarJar("io.github.llamalad7:mixinextras-forge:0.5.4"))
+
 //    if(DefaultNativePlatform.getCurrentOperatingSystem().isMacOsX()) { // MacOS Dev Tweaks
 //        runtimeOnly "maven.modrinth:ctrl-q:vPF3yZ8N"
 //        runtimeOnly "maven.modrinth:mcmouser:1.21-neoforge-1.0.1"
@@ -39,7 +42,8 @@ dependencies {
 }
 
 mixin {
-    add sourceSets.main, "${mod_id}.mixins.refmap.json"
+    add sourceSets.main, "${mod_id}.refmap.json"
+
     config "${mod_id}.mixins.json"
 }
 
@@ -86,6 +90,14 @@ legacyForge {
     }
 }
 
+configurations {
+    runtimeClasspath.extendsFrom localRuntime
+}
+obfuscation {
+    createRemappingConfiguration(configurations.localRuntime)
+}
+
+
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 var generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {
@@ -120,6 +132,10 @@ publishing {
             url "file://${project.projectDir}/repo"
         }
     }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
 }
 
 idea {

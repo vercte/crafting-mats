@@ -2,6 +2,6 @@
   "values": [
     "#minecraft:beds",
     "#minecraft:wool_carpets",
-    "#c:fences"
+    "#forge:fences"
   ]
 }

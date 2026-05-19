@@ -1,7 +1,7 @@
 package net.vercte.craftingmats.util.assets;
 
 import net.minecraft.data.PackOutput;
-import net.neoforged.neoforge.common.data.LanguageProvider;
+import net.minecraftforge.common.data.LanguageProvider;
 import net.vercte.craftingmats.CraftingMats;
 
 public class LangGen extends LanguageProvider {

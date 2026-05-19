@@ -3,11 +3,11 @@ package net.vercte.craftingmats.util.assets;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemDisplayContext;
-import net.neoforged.neoforge.client.model.generators.ItemModelBuilder;
-import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
-import net.neoforged.neoforge.client.model.generators.ModelFile;
-import net.neoforged.neoforge.client.model.generators.loaders.SeparateTransformsModelBuilder;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.minecraftforge.client.model.generators.ItemModelBuilder;
+import net.minecraftforge.client.model.generators.ItemModelProvider;
+import net.minecraftforge.client.model.generators.ModelFile;
+import net.minecraftforge.client.model.generators.loaders.SeparateTransformsModelBuilder;
+import net.minecraftforge.common.data.ExistingFileHelper;
 import net.vercte.craftingmats.CraftingMats;
 
 public class ItemModelGen extends ItemModelProvider {
@@ -32,6 +32,6 @@ public class ItemModelGen extends ItemModelProvider {
                 .texture("layer0", crafting_mat.withSuffix("_paper"))
                 .customLoader(SeparateTransformsModelBuilder::begin)
                 .base(heldModel)
-                .perspective(ItemDisplayContext.valueOf("CRAFTING_MATS_CRAFTING_MAT"), entityModel);
+                .perspective(ItemDisplayContext.HEAD, entityModel);
     }
 }

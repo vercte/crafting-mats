@@ -1,50 +1,55 @@
 package net.vercte.craftingmats;
 
 import net.minecraft.core.cauldron.CauldronInteraction;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.stats.Stats;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.item.*;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
-import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredItem;
-import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraft.world.level.block.LayeredCauldronBlock;
+import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.vercte.craftingmats.mat.CraftingMat;
 import net.vercte.craftingmats.mat.CraftingMatItem;
 import net.vercte.craftingmats.util.CraftingMatDataGeneration;
+
+import java.util.function.Supplier;
 
 @Mod(CraftingMats.ID)
 public class CraftingMats {
     public static final String ID = "crafting_mats";
 
-    private static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(ID);
+    private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, ID);
 
-    public static final DeferredItem<CraftingMatItem> CRAFTING_MAT_ITEM = ITEMS.registerItem(
-            "crafting_mat", CraftingMatItem::new,
-            new Item.Properties().stacksTo(1)
+    public static final Supplier<CraftingMatItem> CRAFTING_MAT_ITEM = ITEMS.register(
+            "crafting_mat",
+            () -> new CraftingMatItem(new Item.Properties().stacksTo(1))
     );
 
-    private static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(BuiltInRegistries.ENTITY_TYPE, ID);
+    private static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, ID);
 
-    public static final DeferredHolder<EntityType<?>, EntityType<CraftingMat>> CRAFTING_MAT = ENTITIES.register(
+    public static final Supplier<EntityType<CraftingMat>> CRAFTING_MAT = ENTITIES.register(
             "crafting_mat",
             () -> EntityType.Builder.<CraftingMat>of(CraftingMat::new, MobCategory.MISC)
                     .sized(1.05f, 1.05f)
-                    .eyeHeight(0)
                     .clientTrackingRange(10)
                     .updateInterval(Integer.MAX_VALUE)
                     .build("crafting_mats:crafting_mat")
     );
 
-    public CraftingMats(IEventBus bus) {
-        ITEMS.addAlias(ResourceLocation.fromNamespaceAndPath("satchels", "crafting_mat"), at("crafting_mat"));
-        ENTITIES.addAlias(ResourceLocation.fromNamespaceAndPath("satchels", "crafting_mat"), at("crafting_mat"));
+    public CraftingMats() {
+        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+
         ITEMS.register(bus);
         ENTITIES.register(bus);
+
+        bus.addListener(CraftingMatsClient::init);
 
         bus.addListener(this::initExtra);
         bus.addListener(this::creativeTabBuild);
@@ -52,12 +57,27 @@ public class CraftingMats {
     }
 
     private void initExtra(final FMLCommonSetupEvent event) {
-        CauldronInteraction.WATER.map().put(CRAFTING_MAT_ITEM.get(), CauldronInteraction.DYED_ITEM);
+        CauldronInteraction.WATER.put(CRAFTING_MAT_ITEM.get(), (state, level, pos, player, hand, stack) -> {
+            CraftingMatItem item = CraftingMats.CRAFTING_MAT_ITEM.get();
+            if (!stack.is(item)) {
+                return InteractionResult.PASS;
+            } else if (!item.hasCustomColor(stack)) {
+                return InteractionResult.PASS;
+            } else {
+                if (!level.isClientSide) {
+                    item.clearColor(stack);
+                    player.awardStat(Stats.CLEAN_ARMOR);
+                    LayeredCauldronBlock.lowerFillLevel(state, level, pos);
+                }
+
+                return InteractionResult.sidedSuccess(level.isClientSide);
+            }
+        });
     }
 
     private void creativeTabBuild(final BuildCreativeModeTabContentsEvent event) {
         if(event.getTabKey().equals(CreativeModeTabs.TOOLS_AND_UTILITIES)) {
-            event.insertAfter(new ItemStack(Items.MAP), CRAFTING_MAT_ITEM.toStack(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
+            event.getEntries().putAfter(new ItemStack(Items.MAP), CRAFTING_MAT_ITEM.get().getDefaultInstance(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
         }
     }
 

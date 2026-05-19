@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(GameRenderer.class)
 public class GameRendererMixin {
-    @WrapOperation(method = "lambda$pick$57", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;isPickable()Z"))
+    @WrapOperation(method = "lambda$pick$61", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;isPickable()Z"))
     private static boolean dontPickMatsWhenCrouching(Entity entity, Operation<Boolean> original) {
         if(!original.call(entity)) return false;
         if(!(entity instanceof CraftingMat)) return true;

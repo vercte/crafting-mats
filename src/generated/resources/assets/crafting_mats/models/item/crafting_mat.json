@@ -8,9 +8,9 @@
       "layer2": "crafting_mats:item/crafting_mat"
     }
   },
-  "loader": "neoforge:separate_transforms",
+  "loader": "forge:separate_transforms",
   "perspectives": {
-    "crafting_mats:crafting_mat": {
+    "head": {
       "parent": "crafting_mats:block/crafting_mat"
     }
   },
