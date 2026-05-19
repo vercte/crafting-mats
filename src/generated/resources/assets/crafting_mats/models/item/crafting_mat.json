@@ -10,7 +10,7 @@
   },
   "loader": "forge:separate_transforms",
   "perspectives": {
-    "head": {
+    "crafting_mats:crafting_mat": {
       "parent": "crafting_mats:block/crafting_mat"
     }
   },

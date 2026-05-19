@@ -49,7 +49,7 @@ public class CraftingMats {
         ITEMS.register(bus);
         ENTITIES.register(bus);
 
-        bus.addListener(CraftingMatsClient::init);
+        ItemDisplayContext.create("CRAFTING_MATS_CRAFTING_MAT", at("crafting_mat"), ItemDisplayContext.HEAD);
 
         bus.addListener(this::initExtra);
         bus.addListener(this::creativeTabBuild);

@@ -45,7 +45,7 @@ public class CraftingMatRenderer<T extends CraftingMat> extends EntityRenderer<T
         context.getItemRenderer().renderStatic(
                 null,
                 stack,
-                ItemDisplayContext.HEAD,
+                ItemDisplayContext.valueOf("CRAFTING_MATS_CRAFTING_MAT"),
                 false,
                 pose,
                 buffer,

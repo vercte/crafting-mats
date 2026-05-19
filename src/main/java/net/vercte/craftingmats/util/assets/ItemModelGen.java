@@ -32,6 +32,6 @@ public class ItemModelGen extends ItemModelProvider {
                 .texture("layer0", crafting_mat.withSuffix("_paper"))
                 .customLoader(SeparateTransformsModelBuilder::begin)
                 .base(heldModel)
-                .perspective(ItemDisplayContext.HEAD, entityModel);
+                .perspective(ItemDisplayContext.valueOf("CRAFTING_MATS_CRAFTING_MAT"), entityModel);
     }
 }
