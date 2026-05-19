@@ -29,7 +29,7 @@ public class CraftingMats {
 
     public static final Supplier<CraftingMatItem> CRAFTING_MAT_ITEM = ITEMS.register(
             "crafting_mat",
-            () -> new CraftingMatItem(new Item.Properties().stacksTo(1))
+            () -> new CraftingMatItem(new Item.Properties())
     );
 
     private static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, ID);
