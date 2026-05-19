@@ -77,6 +77,7 @@ processResources {
     inputs.property "version", version
     inputs.property "mod_name", mod_name
     inputs.property "mod_id", mod_id
+    inputs.property "mod_license", mod_license
     inputs.property "description", mod_description
 
     filesMatching("fabric.mod.json") {
@@ -84,6 +85,7 @@ processResources {
             "version": version,
             "mod_name": mod_name,
             "mod_id": mod_id,
+            "mod_license": mod_license,
             "description": mod_description
         )
     }
