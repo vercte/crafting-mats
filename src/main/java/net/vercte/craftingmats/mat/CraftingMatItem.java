@@ -40,7 +40,7 @@ public class CraftingMatItem extends Item implements DyeableLeatherItem {
         BlockPos pos = context.getClickedPos();
 
         if(!level.isClientSide) {
-            CraftingMat mat = new CraftingMat(context.getItemInHand().copy(), level, pos);
+            CraftingMat mat = new CraftingMat(context.getItemInHand().copyWithCount(1), level, pos);
             level.gameEvent(context.getPlayer(), GameEvent.ENTITY_PLACE, pos);
             level.addFreshEntity(mat);
         }
