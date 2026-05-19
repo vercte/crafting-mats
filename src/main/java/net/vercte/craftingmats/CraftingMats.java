@@ -23,10 +23,7 @@ public class CraftingMats {
 
     private static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(ID);
 
-    public static final DeferredItem<CraftingMatItem> CRAFTING_MAT_ITEM = ITEMS.registerItem(
-            "crafting_mat", CraftingMatItem::new,
-            new Item.Properties().stacksTo(1)
-    );
+    public static final DeferredItem<CraftingMatItem> CRAFTING_MAT_ITEM = ITEMS.registerItem("crafting_mat", CraftingMatItem::new);
 
     private static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(BuiltInRegistries.ENTITY_TYPE, ID);
 
