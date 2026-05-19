@@ -19,9 +19,7 @@ public class CraftingMats implements ModInitializer {
     public static final CraftingMatItem CRAFTING_MAT_ITEM = Registry.register(
             BuiltInRegistries.ITEM,
             at("crafting_mat"),
-            new CraftingMatItem(
-                    new Item.Properties().stacksTo(1)
-            )
+            new CraftingMatItem(new Item.Properties())
     );
 
     public static final EntityType<CraftingMat> CRAFTING_MAT = Registry.register(

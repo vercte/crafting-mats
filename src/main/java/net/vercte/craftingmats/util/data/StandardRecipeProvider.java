@@ -18,7 +18,7 @@ public class StandardRecipeProvider extends FabricRecipeProvider {
 
     @Override
     public void buildRecipes(@NotNull RecipeOutput output) {
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.TOOLS, CraftingMats.CRAFTING_MAT_ITEM)
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.TOOLS, CraftingMats.CRAFTING_MAT_ITEM, 4)
                 .requires(ConventionalItemTags.STRINGS)
                 .requires(Items.PAPER)
                 .requires(ConventionalItemTags.PLAYER_WORKSTATIONS_CRAFTING_TABLES)
