@@ -3,20 +3,20 @@
   "category": "equipment",
   "ingredients": [
     {
-      "tag": "c:strings"
+      "item": "minecraft:string"
     },
     {
       "item": "minecraft:paper"
     },
     {
-      "tag": "c:player_workstations/crafting_tables"
+      "item": "minecraft:crafting_table"
     },
     {
-      "tag": "c:leathers"
+      "item": "minecraft:leather"
     }
   ],
   "result": {
-    "count": 1,
-    "id": "crafting_mats:crafting_mat"
+    "count": 4,
+    "item": "crafting_mats:crafting_mat"
   }
 }

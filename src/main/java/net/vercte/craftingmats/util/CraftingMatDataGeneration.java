@@ -6,8 +6,6 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator.Pack;
 import net.vercte.craftingmats.util.assets.ModelGen;
 import net.vercte.craftingmats.util.assets.LangGen;
 import net.vercte.craftingmats.util.data.BlockTagGen;
-import net.vercte.craftingmats.util.data.EntityTagGen;
-import net.vercte.craftingmats.util.data.ItemTagGen;
 import net.vercte.craftingmats.util.data.StandardRecipeProvider;
 
 public class CraftingMatDataGeneration implements DataGeneratorEntrypoint {
@@ -18,9 +16,7 @@ public class CraftingMatDataGeneration implements DataGeneratorEntrypoint {
         pack.addProvider(ModelGen::new);
         pack.addProvider(LangGen::new);
 
-        pack.addProvider(EntityTagGen::new);
         pack.addProvider(BlockTagGen::new);
-        pack.addProvider(ItemTagGen::new);
         pack.addProvider(StandardRecipeProvider::new);
     }
 }

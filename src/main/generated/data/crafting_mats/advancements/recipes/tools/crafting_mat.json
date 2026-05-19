@@ -5,7 +5,9 @@
       "conditions": {
         "items": [
           {
-            "items": "#c:leathers"
+            "items": [
+              "minecraft:leather"
+            ]
           }
         ]
       },
@@ -15,7 +17,9 @@
       "conditions": {
         "items": [
           {
-            "items": "minecraft:paper"
+            "items": [
+              "minecraft:paper"
+            ]
           }
         ]
       },
@@ -30,14 +34,15 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
       "has_paper",
-      "has_leather"
+      "has_leather",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "crafting_mats:crafting_mat"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }
