@@ -2,10 +2,13 @@ package net.vercte.craftingmats.mat;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeableLeatherItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -62,5 +65,10 @@ public class CraftingMatItem extends Item implements DyeableLeatherItem {
         if(state.getBlock() instanceof TrapDoorBlock && state.getValue(TrapDoorBlock.HALF) == Half.BOTTOM && !state.getValue(TrapDoorBlock.OPEN)) return true;
 
         return Block.isFaceFull(shape, Direction.UP);
+    }
+
+    public int getColor(ItemStack stack) {
+        CompoundTag compoundtag = stack.getTagElement("display");
+        return compoundtag != null && compoundtag.contains("color", Tag.TAG_ANY_NUMERIC) ? compoundtag.getInt("color") : CraftingMat.DEFAULT_PAPER_COLOR;
     }
 }
