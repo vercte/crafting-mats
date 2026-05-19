@@ -53,18 +53,7 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
     modRuntimeOnly "maven.modrinth:ctrl-q:N4g6q0kL"
-    modRuntimeOnly "maven.modrinth:mcmouser:1.21-fabric-1.0.0"
-
-    // Sable
-    modCompileOnlyApi("dev.ryanhcode.sable:sable-fabric-${project.minecraft_version}:${project.sable_version}")
-
-    if(sable_enabled) {
-        modRuntimeOnly("foundry.veil:veil-fabric-${project.minecraft_version}:${project.veil_version}") {
-            exclude group: "maven.modrinth"
-        }
-
-        modRuntimeOnly("dev.ryanhcode.sable:sable-fabric-${project.minecraft_version}:${project.sable_version}")
-    }
+    modRuntimeOnly "maven.modrinth:mcmouser:1.20-fabric-1.0.0"
 }
 
 fabricApi {
@@ -90,14 +79,14 @@ processResources {
 }
 
 tasks.withType(JavaCompile).configureEach {
-    it.options.release = 21
+    it.options.release = 17
 }
 
 java {
     withSourcesJar()
 
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 }
 
 jar {
