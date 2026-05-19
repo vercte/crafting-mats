@@ -22,9 +22,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.decoration.HangingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
@@ -252,6 +250,11 @@ public class CraftingMat extends HangingEntity {
 
     protected ItemStack getItemStack() {
         return this.getEntityData().get(DATA_ITEM);
+    }
+
+    @Override
+    protected float getEyeHeight(@NotNull Pose pose, @NotNull EntityDimensions dimensions) {
+        return 0;
     }
 
     @Override
