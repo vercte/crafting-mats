@@ -2,10 +2,9 @@ package net.vercte.craftingmats.mat;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DyeableLeatherItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
@@ -20,7 +19,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.vercte.craftingmats.CraftingMatTags;
 import org.jetbrains.annotations.NotNull;
 
-public class CraftingMatItem extends Item {
+public class CraftingMatItem extends Item implements DyeableLeatherItem {
     public CraftingMatItem(Properties properties) {
         super(properties);
     }
@@ -36,7 +35,6 @@ public class CraftingMatItem extends Item {
 
         if(!level.isClientSide) {
             CraftingMat mat = new CraftingMat(context.getItemInHand().copy(), level, pos);
-            level.playSound(null, pos, SoundEvents.WOOL_PLACE, SoundSource.BLOCKS);
             level.gameEvent(context.getPlayer(), GameEvent.ENTITY_PLACE, pos);
             level.addFreshEntity(mat);
         }
