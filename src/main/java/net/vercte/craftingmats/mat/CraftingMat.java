@@ -7,13 +7,10 @@ import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.server.level.ServerEntity;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -28,11 +25,10 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MoverType;
-import net.minecraft.world.entity.decoration.BlockAttachedEntity;
+import net.minecraft.world.entity.decoration.HangingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.DyedItemColor;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -53,7 +49,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 
-public class CraftingMat extends BlockAttachedEntity {
+public class CraftingMat extends HangingEntity {
     private static final Int2IntArrayMap paperColorToGridColor = new Int2IntArrayMap();
 
     public static final int DEFAULT_PAPER_COLOR = 0xffefe7d8;
@@ -65,11 +61,11 @@ public class CraftingMat extends BlockAttachedEntity {
     protected int checkInterval;
     protected boolean fixed;
 
-    public CraftingMat(EntityType<? extends BlockAttachedEntity> type, Level level) {
+    public CraftingMat(EntityType<? extends CraftingMat> type, Level level) {
         super(type, level);
     }
 
-    protected CraftingMat(EntityType<? extends BlockAttachedEntity> type, Level level, BlockPos pos) {
+    protected CraftingMat(EntityType<? extends CraftingMat> type, Level level, BlockPos pos) {
         super(type, level, pos);
     }
 
@@ -141,7 +137,7 @@ public class CraftingMat extends BlockAttachedEntity {
 
         if(this.fixed) return;
         if(!this.level().getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) return;
-        if(entity instanceof Player player && player.hasInfiniteMaterials()) return;
+        if(entity instanceof Player player && player.getAbilities().instabuild) return;
 
         this.spawnAtLocation(this.getItemStack(), 0.6f);
     }
@@ -152,19 +148,14 @@ public class CraftingMat extends BlockAttachedEntity {
     }
 
     @Override
-    @NotNull
-    public Packet<ClientGamePacketListener> getAddEntityPacket(@NotNull ServerEntity entity) {
-        return new ClientboundAddEntityPacket(this, entity);
-    }
-
-    @Override
     public void recreateFromPacket(@NotNull ClientboundAddEntityPacket packet) {
         super.recreateFromPacket(packet);
     }
 
     @Override
-    protected void defineSynchedData(@NotNull SynchedEntityData.Builder builder) {
-        builder.define(DATA_ITEM, CraftingMats.CRAFTING_MAT_ITEM.toStack());
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.getEntityData().define(DATA_ITEM, CraftingMats.CRAFTING_MAT_ITEM.get().getDefaultInstance());
     }
 
     @Override
@@ -172,9 +163,8 @@ public class CraftingMat extends BlockAttachedEntity {
         super.readAdditionalSaveData(tag);
 
         fixed = tag.getBoolean("Fixed");
-        ItemStack stack = ItemStack.parse(this.registryAccess(), tag.getCompound("Item"))
-                .orElse(CraftingMats.CRAFTING_MAT_ITEM.toStack());
-        this.getEntityData().set(DATA_ITEM, stack);
+        ItemStack stack = ItemStack.of(tag.getCompound("Item"));
+        this.getEntityData().set(DATA_ITEM, stack.isEmpty() ? CraftingMats.CRAFTING_MAT_ITEM.get().getDefaultInstance() : stack);
     }
 
     @Override
@@ -182,7 +172,7 @@ public class CraftingMat extends BlockAttachedEntity {
         super.addAdditionalSaveData(tag);
 
         tag.putBoolean("Fixed", fixed);
-        tag.put("Item", this.getEntityData().get(DATA_ITEM).save(this.registryAccess()));
+        tag.put("Item", this.getEntityData().get(DATA_ITEM).save(new CompoundTag()));
     }
 
     @Override
@@ -193,8 +183,8 @@ public class CraftingMat extends BlockAttachedEntity {
         AABB box = shape.isEmpty() ? Shapes.block().bounds() : shape.bounds();
         AABB inflated = box.move(pos).inflate(1/64f);
 
-        double min = box.getMinPosition().y();
-        double max = box.getMaxPosition().y();
+        double min = box.minY;
+        double max = box.maxY;
         setPosRaw(
                 pos.getX() + 0.5,
                 pos.getY() + min + ((max - min) / 2),
@@ -236,7 +226,7 @@ public class CraftingMat extends BlockAttachedEntity {
     }
 
     public static int calculateColor(ItemStack stack, boolean grid) {
-        int paperColor = DyedItemColor.getOrDefault(stack, DEFAULT_PAPER_COLOR);
+        int paperColor = CraftingMats.CRAFTING_MAT_ITEM.get().getColor(stack);
         if(!grid) return paperColor;
         if(paperColor == DEFAULT_PAPER_COLOR) return DEFAULT_GRID_COLOR;
 
@@ -263,4 +253,17 @@ public class CraftingMat extends BlockAttachedEntity {
     protected ItemStack getItemStack() {
         return this.getEntityData().get(DATA_ITEM);
     }
+
+    @Override
+    public int getWidth() {
+        return 0; // idgaf
+    }
+
+    @Override
+    public int getHeight() {
+        return 0; // idgaf
+    }
+
+    @Override
+    public void playPlacementSound() { /* idgaf */ }
 }
