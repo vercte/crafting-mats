@@ -5,7 +5,10 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ClickAction;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.DyeableLeatherItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -70,5 +73,28 @@ public class CraftingMatItem extends Item implements DyeableLeatherItem {
     public int getColor(ItemStack stack) {
         CompoundTag compoundtag = stack.getTagElement("display");
         return compoundtag != null && compoundtag.contains("color", Tag.TAG_ANY_NUMERIC) ? compoundtag.getInt("color") : CraftingMat.DEFAULT_PAPER_COLOR;
+    }
+
+    @Override
+    public boolean overrideOtherStackedOnMe(@NotNull ItemStack stack, @NotNull ItemStack other, @NotNull Slot slot, @NotNull ClickAction action, @NotNull Player player, @NotNull SlotAccess access) {
+        if(stack.isEmpty() || other.isEmpty()) return false;
+        if(!other.is(this)) return false;
+        if(hasDisplay(stack) || hasDisplay(other)) return false;
+
+        int maxMoved = stack.getMaxStackSize() - stack.getCount();
+        if(maxMoved == 0) return false;
+
+        int moved = action == ClickAction.SECONDARY ? 1 : Math.min(maxMoved, other.getCount());
+
+        other.shrink(moved);
+        stack.grow(moved);
+        return true;
+    }
+
+    @SuppressWarnings("DataFlowIssue")
+    private static boolean hasDisplay(ItemStack stack) {
+        return stack.hasTag() &&
+                stack.getTag().contains("display") &&
+                !stack.getTagElement("display").isEmpty();
     }
 }
